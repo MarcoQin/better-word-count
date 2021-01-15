@@ -1,16 +1,19 @@
 import { MarkdownView, Plugin, TFile } from "obsidian";
 import { StatusBar } from "./status-bar";
+import {WordCounter} from "./counter";
 
 export default class BetterWordCount extends Plugin {
   public recentlyTyped: boolean;
   public statusBar: StatusBar;
   public currentFile: TFile;
+  private counter: WordCounter;
 
   onload() {
     let statusBarEl = this.addStatusBarItem();
     this.statusBar = new StatusBar(statusBarEl);
 
     this.recentlyTyped = false;
+    this.counter = new WordCounter();
 
     this.registerEvent(
       this.app.workspace.on("file-open", this.onFileOpen, this)
@@ -77,22 +80,8 @@ export default class BetterWordCount extends Plugin {
   }
 
   updateWordCount(text: string) {
-    let words = 0;
-
-    const matches = text.match(
-      /[a-zA-Z0-9_\u0392-\u03c9\u00c0-\u00ff\u0600-\u06ff]+|[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff\u3040-\u309f\uac00-\ud7af]+/gm
-    );
-
-    if (matches) {
-      for (let i = 0; i < matches.length; i++) {
-        if (matches[i].charCodeAt(0) > 19968) {
-          words += matches[i].length;
-        } else {
-          words += 1;
-        }
-      }
-    }
-
-    this.statusBar.displayText(`${words} words ` + `${text.length} characters`);
+    this.counter.count(text);
+    let fmt = "共 ${cjk} 字, 非空白字符数: ${total - whitespace}";
+    this.statusBar.displayText(this.counter.format(fmt));
   }
 }
