@@ -155,7 +155,8 @@ export class WordCounter {
      * @param ch Char to be tested.
      */
     private _countWhitespaceChar(ch: string) {
-        if (this._regexWhitespaceChar.test(ch)) {
+        const _regexWhitespaceChar = /\s/g;
+        if (_regexWhitespaceChar.test(ch)) {
             this._nWhitespaceChars += 1;
         }
     }
