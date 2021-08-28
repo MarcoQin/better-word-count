@@ -80,6 +80,8 @@ export default class BetterWordCount extends Plugin {
   }
 
   updateWordCount(text: string) {
+    text = text.replace("\n", "")
+    text = text.replace("\r", "")
     this.counter.count(text);
     let fmt = "共 ${cjk} 字, 非空白字符数: ${total - whitespace}";
     this.statusBar.displayText(this.counter.format(fmt));

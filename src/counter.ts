@@ -43,7 +43,6 @@ export class WordCounter {
             this._countWhitespaceChar(ch);
         }
         this._countEnglishWord(' ', inWord);
-
         this._nTotalChars = text.length;
     }
 
